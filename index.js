@@ -5,6 +5,44 @@ const Hapi_Geo_Locate = require('hapi-geo-locate')
 const Inert = require('@hapi/inert');
 const path = require('path');
 const Connection = require('./dbconfig')
+const Basic_Auth_Plugin = require('@hapi/basic');
+const BoomPlugin = require('@hapi/boom')
+//Mocked users
+const users = {
+    suri:{
+        username:"suri",
+        password:"sk",
+        id:0,
+        name:"sksuri"
+    },
+    sk:{
+        username:"sk",
+        password:"suri",
+        id:1,
+        name:"sksk"
+    },
+}
+const validate = async(request,username,password,h) => {
+    /**
+     * If validate returns "isValid:false" then the popup reappears
+     * and the page content is still hidden from the user. 
+     */
+    if(!users[username]){
+        return {isValid:false}
+    }
+
+    const user = users[username]; 
+
+    /**
+     * The object passed to crednetials can be accessed in the handler by
+     * request.auth.credentials.
+     */
+    if(user.password === password){
+        return {isValid:true,credentials:{id:user.id,name:user.name}};
+    }else{
+        return {isValid:false}
+    }
+}
 
 //Create server function
 //Wrap in async function so we can make use of await keyword.
@@ -30,8 +68,20 @@ const init = async() => {
     },
     {
         plugin:Inert,
-    }
+    },
+    {
+        plugin:Basic_Auth_Plugin //1. Register Basic Auth plugin
+    },
 ])
+
+//2. Implement Strategy
+server.auth.strategy('login','basic',{
+    validate
+})
+
+// We can specify the strategy on select routes by using options=> auth => scheme name 
+//we can specify the strategy to work on every route using
+// server.auth.default("login")
 
     server.route({
         method:'GET',
@@ -138,6 +188,28 @@ const init = async() => {
         handler:async(request,h) => {
             const users = await Connection.getUsers();
             h.response(users)
+        }
+    })
+    
+    //3. create a route to implement the scheme.
+    //we have created our strategy but we have not registered it with a route.
+    server.route({
+        method:'GET',
+        path:'/loginbasic',
+        handler:(request,h)=>{
+            //as we are passing credentials object and this handler is register with route.
+            return `welcome to restricted page. ${request.auth.credentials.name}`
+        },
+        options:{
+            auth:'login'//name of the strategy
+        }
+    })
+
+    server.route({
+        method:'GET',
+        path:'/logout',
+        handler:(request,h) => {
+            return BoomPlugin.unauthorized("You have been logged out successfully");
         }
     })
 

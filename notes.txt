@@ -52,3 +52,55 @@ Sequelize Models
 - A model is an abstraction that represents a table in database.
 - Models tell sequelize the name of the table in the database, which columns it has and their
   data types.
+
+
+Authentication
+====
+The way the authentication works in hapi is to use of 
+schemes and strategy.
+
+Scheme -> different scheme to implement authentication.
+E.g. Basic authentication, Digest authentication etc.
+
+==
+Basic authentication hides the content of a web page until credentials
+are provided in a popup window.
+
+
+Scheme 
+====
+- Scheme are a way of handling authentication within api.
+- Some schemes in hapi are the basic scheme, digest scheme and cookie scheme.
+
+Strategy
+===
+How we implement a scheme.
+
+
+steps
+1. Register the plugin
+2. Implement Strategy
+
+server.auth.strategy take three parameters
+1. strategy name (whatever we want)
+2. name of the scheme
+3. options based on the scheme requirements.
+
+For basic, in the option object, we need to define validate property.
+validate property is a function that validate the user's credentials
+to check whether the user allowed to login into the website.
+
+validate
+===
+- Required key for options in server.auth.strategy() with basic scheme.
+- Value is a function that must return isValid.
+- Parameters - request, username, password, h
+
+
+Basic authentication is not usually used for login and logout functionality.
+
+Cookies/sessions are used for the concept of loggin in.
+
+However, we can "logout" of basic auth using the Boom plugin.
+
+Specifically, we throw a http unauthenticated error(401)
