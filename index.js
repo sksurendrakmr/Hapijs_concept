@@ -3,7 +3,8 @@
 const Hapi = require('@hapi/hapi');
 const Hapi_Geo_Locate = require('hapi-geo-locate')
 const Inert = require('@hapi/inert');
-const path = require('path')
+const path = require('path');
+const Connection = require('./dbconfig')
 
 //Create server function
 //Wrap in async function so we can make use of await keyword.
@@ -64,34 +65,6 @@ const init = async() => {
         }
     })
 
-    // server.route({
-    //     method:'GET',
-    //     path:'/users',
-    //     handler:(request,h)=>{
-    //         return '<h1>Hello User<h1/>';
-    //     }
-    // })
-    //Add uri parameter
-    // server.route({
-    //     method:'GET',
-    //     path:'/users/{user}',
-    //     handler:(request,h)=>{
-    //         return `<h1>Hello ${request.params.user}<h1/>`;
-    //     }
-    // })
-
-    //optional parameters uri
-    server.route({
-        method:'GET',
-        path:'/users/{user?}',
-        handler:(request,h)=>{
-            if(request.params.user){
-                return `<h1>Hello ${request.params.user}<h1/>`;
-            }else{
-                return `Hello Stranger!!`
-            }
-        }
-    })
 
     //query paramters
     //http://localhost:5050/users?name=s&age=25
@@ -155,6 +128,16 @@ const init = async() => {
             }else{
                 return h.redirect('/');
             }
+        }
+    })
+
+    //Get users
+    server.route({
+        method:'GET',
+        path:'/getUsers',
+        handler:async(request,h) => {
+            const users = await Connection.getUsers();
+            h.response(users)
         }
     })
 

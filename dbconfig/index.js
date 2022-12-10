@@ -15,15 +15,29 @@ sequelize.authenticate()
     .then(()=>console.log("Connected to database"))
     .catch((err)=>console.log("couldn't connect"))
 
-//Test the connection by retreiving the data
-async function testConnection(){
+
+const GET_USERS_QUERY = "SELECT * FROM users";
+
+const getUsers = async() => {
     try {
         await sequelize.authenticate();
-        const {results, metadata} = await sequelize.query('SELECT * FROM users')
-        console.log("Results",results);
+        const {results,metadata} = await sequelize.query(GET_USERS_QUERY);
+        return results;
     } catch (error) {
-        console.log("Couldn't connect...!!!");
+        console.log("Something went wrong",error);
     }
-}
+}    
+//Test the connection by retreiving the data
+// async function testConnection(){
+//     try {
+//         await sequelize.authenticate();
+//         const {results, metadata} = await sequelize.query('SELECT * FROM users')
+//         console.log("Results",results);
+//     } catch (error) {
+//         console.log("Couldn't connect...!!!");
+//     }
+// }
 
-testConnection()
+// testConnection()
+
+module.exports.getUsers = getUsers;

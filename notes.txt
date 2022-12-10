@@ -46,3 +46,9 @@ Sequelize query() function :-
 - it returns:
     - Results of the query
     - Metadata
+
+Sequelize Models
+==== 
+- A model is an abstraction that represents a table in database.
+- Models tell sequelize the name of the table in the database, which columns it has and their
+  data types.
