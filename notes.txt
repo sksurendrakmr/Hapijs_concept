@@ -24,4 +24,11 @@ A plugin is basically additional functionality added to our app.
 (Its a module. Thus, we can import it)
 In case of Hapi plugin, we also need to register it with server.
 
+Static files
+====
+A static file is a file delivered to the user without having to 
+to be modified or processed.
+We will use a plugin called inert to serve a static file.
 
+Inert a plugin that provides new handler methods for serving static
+files and directories.
