@@ -1,0 +1,19 @@
+Request
+===
+Created internally for each incoming request.
+request.auth => contains authentication information
+request.query => each key is a query parameter.
+request.path => the request URI's pathname component
+etc.
+
+
+h (Response Toolkit)
+===
+A collection of properties and utilities passed to every lifecycle
+method.
+
+h.authenticated(data) => use to handle valid credentials
+h.redirect(uri) -> redirects the client to the specified uri.
+h.response([value]) -> wraps provided value and returns a response object.
+etc.
+
