@@ -104,3 +104,61 @@ Cookies/sessions are used for the concept of loggin in.
 However, we can "logout" of basic auth using the Boom plugin.
 
 Specifically, we throw a http unauthenticated error(401)
+
+
+
+Cookies
+====
+- Cookies are essentially text files with data used to identify a user.
+- When we visit a website for the first time, the website puts a cookie on your 
+  browser with its own unique ID.
+- The website then uses this ID to keep track of your session.
+- A session is essentially your overall visit on the website.
+- Every subsequent request tot this website will contain the cookie to identify
+  the user.
+
+When website loaded for the first time, it send the first request to server and then
+server send the response back to client side with a cookie and every subsequent
+request contains this cookie.
+
+
+
+Cookie Scheme Cookie key options
+
+name                      ------- The name of the cookie. Default name is 'sid'
+password                  ------- Cookies are automatically encoded with iron. This is required and needs atleast 32 characters
+isSecure                  ------- Default to true. If false the cookie can be transmitted over insecure connection.
+ttl                       ------- The cookie time expiration in milliseconds. By default, the cookie expires when browser closes.
+isHttpOnly                ------- Default is true. if false the cookie will not have the HttpOnly flag which prevents cookie from being accessed by anything other than the server.
+isSameSite                ------- Default to strict (never allow cookie to be sent to a cross site request). Other options are Lax(allow cookie to be sent on some cross site requests) and false(omitted)
+path                      ------- Indicate a URL path that must exist in the requested URL in order to send the cookie header. Default is none. 
+
+
+
+
+Hapi auth operates in 2 modes.
+- required(default) - requires credentials to be accessed
+- try - Hapi will try to authenticate but if it fails the oute can still be accessed.
+
+
+If the user has managed to sign in, then we want to set the cookie with user specific data.
+This is done through the request.cookieAuth.set() method.
+
+
+We can access credentials value either from cookieAuth.set or 
+The validateFunc function can return an object with the keys valid(value is a boolean) and 
+credentials (value is an object). The credentials object is passed back to the application in request.auth.credentials.
+If set, these credentials will override the current cookie as if request.cookieAuth.set() was called.
+
+
+request.auth.isAuthenticated() returns true if the user is already authenticated and false if the user is not authenticated.
+
+As we already have a cookie set, this means we have already been authenticated so this will return true.
+
+
+
+Time to live.
+====
+- Cookie can expire and the time it takes before a cookie expires is called time to live or ttl.
+- A cookie with no expiration date sepecified will expire when the browser is closed (these are often called session cookies)
+- In Hapi, we can set the ttl in milliseconds with the key ttl inside our cookie object when setting up our strategy.
