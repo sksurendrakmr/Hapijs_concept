@@ -143,6 +143,21 @@ const init = async() => {
         }
     })
 
+    //form data
+    server.route({
+        method:'POST',
+        path:'/login',
+        handler:(req,h)=>{
+            const {username,password} = req.payload;
+            if(username==="suri" && password==="1234"){
+                // return `<h1>You logged In<h1/>`
+                return h.file('LoggedIn.html');
+            }else{
+                return h.redirect('/');
+            }
+        }
+    })
+
     //start server
     await server.start();
     console.log(`Server started on: ${server.info.uri}`);
