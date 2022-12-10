@@ -32,3 +32,17 @@ We will use a plugin called inert to serve a static file.
 
 Inert a plugin that provides new handler methods for serving static
 files and directories.
+
+=========
+ORM is a technique that lets us query and manipulate data from 
+a database in an object oriented way.
+
+we use Sequelize for it.
+
+Sequelize is a promise based ORM.
+
+Sequelize query() function :-
+- used to run raw queries against the connected database table.
+- it returns:
+    - Results of the query
+    - Metadata
