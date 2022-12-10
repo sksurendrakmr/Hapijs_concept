@@ -17,3 +17,11 @@ h.redirect(uri) -> redirects the client to the specified uri.
 h.response([value]) -> wraps provided value and returns a response object.
 etc.
 
+
+Plugin
+===
+A plugin is basically additional functionality added to our app.
+(Its a module. Thus, we can import it)
+In case of Hapi plugin, we also need to register it with server.
+
+

@@ -1,6 +1,7 @@
 'use-strict'
 
 const Hapi = require('@hapi/hapi');
+const Hapi_Geo_Locate = require('hapi-geo-locate')
 
 //Create server function
 //Wrap in async function so we can make use of await keyword.
@@ -11,6 +12,29 @@ const init = async() => {
         port:5050
     })
 
+    await server.register({
+        plugin: Hapi_Geo_Locate,
+        options:{
+            enableByDefault:true
+        }
+    })
+
+    server.route({
+        method:'GET',
+        path:'/location',
+        handler:(request,h)=>{
+            // console.log(request);
+            // console.log("Response Toolkit", h);
+            // return request.location;
+            if(request.location){
+                return request.location;
+            }else{
+                return "<h1>Location is not enabled by default.</h1>"
+            }
+
+        }
+    })
+
     server.route({
         method:'GET',
         path:'/',
@@ -19,26 +43,26 @@ const init = async() => {
         }
     })
 
-    server.route({
-        method:'GET',
-        path:'users',
-        handler:(request,h)=>{
-            return '<h1>Hello User<h1/>';
-        }
-    })
+    // server.route({
+    //     method:'GET',
+    //     path:'/users',
+    //     handler:(request,h)=>{
+    //         return '<h1>Hello User<h1/>';
+    //     }
+    // })
     //Add uri parameter
-    server.route({
-        method:'GET',
-        path:'users/{user}',
-        handler:(request,h)=>{
-            return `<h1>Hello ${request.params.user}<h1/>`;
-        }
-    })
+    // server.route({
+    //     method:'GET',
+    //     path:'/users/{user}',
+    //     handler:(request,h)=>{
+    //         return `<h1>Hello ${request.params.user}<h1/>`;
+    //     }
+    // })
 
     //optional parameters uri
     server.route({
         method:'GET',
-        path:'users/{user?}',
+        path:'/users/{user?}',
         handler:(request,h)=>{
             if(request.params.user){
                 return `<h1>Hello ${request.params.user}<h1/>`;
@@ -52,7 +76,7 @@ const init = async() => {
     //http://localhost:5050/users?name=s&age=25
     server.route({
         method:'GET',
-        path:'/users',
+        path:'/userinfo',
         handler:(req,h)=>{
             return `<h1>${req.query.name} ${req.query.age}<h1/>`
         }
@@ -61,7 +85,7 @@ const init = async() => {
     //redirect
     server.route({
         method:'GET',
-        path:'/users',
+        path:'/users_redirect',
         handler:(req,h)=>{
             return h.redirect('/');
         }
